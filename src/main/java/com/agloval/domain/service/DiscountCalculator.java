@@ -10,23 +10,31 @@ import java.util.List;
 
 public class DiscountCalculator {
 
+    private static final int VOLUME_HIGH_THRESHOLD = 48;
+    private static final int VOLUME_LOW_THRESHOLD = 24;
+    private static final int PREFERRED_THICKNESS_MM = 16;
+    private static final BigDecimal VOLUME_HIGH_DISCOUNT_PERCENT = new BigDecimal("6");
+    private static final BigDecimal VOLUME_LOW_DISCOUNT_PERCENT = new BigDecimal("3");
+    private static final BigDecimal THICKNESS_DISCOUNT_PERCENT = new BigDecimal("3");
+    private static final BigDecimal REGULAR_CUSTOMER_DISCOUNT_PERCENT = new BigDecimal("2");
+
     public BigDecimal calculateLineDiscount(Product product, int totalBoardCount, boolean isRegularCustomer) {
         BigDecimal discount = BigDecimal.ZERO;
 
         if (product.getCategory() == ProductCategory.TABLERO) {
-            if (totalBoardCount >= 48) {
-                discount = discount.add(new BigDecimal("6"));
-            } else if (totalBoardCount >= 24) {
-                discount = discount.add(new BigDecimal("3"));
+            if (totalBoardCount >= VOLUME_HIGH_THRESHOLD) {
+                discount = discount.add(VOLUME_HIGH_DISCOUNT_PERCENT);
+            } else if (totalBoardCount >= VOLUME_LOW_THRESHOLD) {
+                discount = discount.add(VOLUME_LOW_DISCOUNT_PERCENT);
             }
 
-            if (product.getThicknessMm() != null && product.getThicknessMm() == 16) {
-                discount = discount.add(new BigDecimal("3"));
+            if (product.getThicknessMm() != null && product.getThicknessMm() == PREFERRED_THICKNESS_MM) {
+                discount = discount.add(THICKNESS_DISCOUNT_PERCENT);
             }
         }
 
         if (isRegularCustomer) {
-            discount = discount.add(new BigDecimal("2"));
+            discount = discount.add(REGULAR_CUSTOMER_DISCOUNT_PERCENT);
         }
 
         return discount;
@@ -36,13 +44,13 @@ public class DiscountCalculator {
         List<String> parts = new ArrayList<>();
 
         if (product.getCategory() == ProductCategory.TABLERO) {
-            if (totalBoardCount >= 48) {
+            if (totalBoardCount >= VOLUME_HIGH_THRESHOLD) {
                 parts.add("Volume 6% (48+ boards)");
-            } else if (totalBoardCount >= 24) {
+            } else if (totalBoardCount >= VOLUME_LOW_THRESHOLD) {
                 parts.add("Volume 3% (24+ boards)");
             }
 
-            if (product.getThicknessMm() != null && product.getThicknessMm() == 16) {
+            if (product.getThicknessMm() != null && product.getThicknessMm() == PREFERRED_THICKNESS_MM) {
                 parts.add("16mm bonus 3%");
             }
         }

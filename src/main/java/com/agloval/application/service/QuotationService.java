@@ -41,6 +41,9 @@ public class QuotationService implements QuotationUseCase {
 
     private final QuotationStateMachine stateMachine = new QuotationStateMachine();
 
+    private static final String QUOTATION_NUMBER_PREFIX = "Q-";
+    private static final int QUOTATION_SUFFIX_LENGTH = 8;
+
     @Override
     public QuotationResponse createQuotation(QuotationRequest request) {
         User user = userRepositoryPort.findById(request.getUserId())
@@ -119,8 +122,8 @@ public class QuotationService implements QuotationUseCase {
     }
 
     private String generateQuotationNumber() {
-        String suffix = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        return "Q-" + LocalDate.now().getYear() + "-" + suffix;
+        String suffix = UUID.randomUUID().toString().substring(0, QUOTATION_SUFFIX_LENGTH).toUpperCase();
+        return QUOTATION_NUMBER_PREFIX + LocalDate.now().getYear() + "-" + suffix;
     }
 
     private QuotationResponse toResponse(Quotation quotation) {
