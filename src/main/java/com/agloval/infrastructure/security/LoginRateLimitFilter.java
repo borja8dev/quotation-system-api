@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LoginRateLimitFilter extends OncePerRequestFilter {
 
     private static final String LOGIN_PATH = "/api/v1/auth/login";
+    private static final String CONTENT_TYPE_JSON = "application/json";
 
     private final int maxAttempts;
     private final int windowMinutes;
@@ -44,7 +45,7 @@ public class LoginRateLimitFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } else {
             response.setStatus(HttpStatus.TOO_MANY_REQUESTS.value());
-            response.setContentType("application/json");
+            response.setContentType(CONTENT_TYPE_JSON);
             response.getWriter().write("{\"status\":429,\"error\":\"Too Many Requests\",\"message\":\"Too many login attempts. Try again later.\"}");
         }
     }
