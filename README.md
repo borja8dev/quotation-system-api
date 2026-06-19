@@ -3,12 +3,12 @@
 ![Java](https://img.shields.io/badge/Java-21-blue?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen?logo=spring&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-154%20passing-success)
+![Tests](https://img.shields.io/badge/tests-157%20passing-success)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 Automated quotation system for Agloval SL. REST API with volume discounts, business validations, JWT authentication, role-based access control, and PDF export.
 
-**Current Version:** v1.2.0 (Phase F - PDF Generation + Docker)
+**Current Version:** v1.3.0 (Phase G - Code Polish + Portfolio Ready)
 
 **Status:** Development/Demo (MVP)
 
@@ -35,14 +35,14 @@ Automated quotation system for Agloval SL. REST API with volume discounts, busin
 
 This is a demonstration MVP, not a production system currently deployed at Agloval.
 
-**What's included (v0.1 - v1.2):**
+**What's included (v0.1 - v1.3):**
 - Fully functional REST API with 20 endpoints
 - JWT authentication + role-based access control
 - Quotation calculation engine with volume discounts and business validations
 - PDF export: `GET /api/v1/quotations/{id}/pdf` returns a styled PDF with VAT
 - PostgreSQL persistence with Flyway migrations
 - Docker: full production stack (app + DB) via `docker-compose up -d`
-- Professional testing suite (154 tests, 0 failures)
+- Professional testing suite (157 tests, 0 failures, includes E2E auth→quotation→PDF flow)
 
 **What's NOT included yet:**
 - Frontend/Web UI (planned as separate project)
@@ -52,6 +52,14 @@ This is a demonstration MVP, not a production system currently deployed at Aglov
 ---
 
 ## Current Status
+
+### v1.3.0 - Code Polish + Portfolio Ready (Phase G)
+
+- **Constants extracted** — all magic numbers and strings replaced with named `private static final` constants across domain, security, and PDF layers.
+- **E2E integration test** — full `register → create quotation → download PDF` flow covered via `@SpringBootTest + MockMvc + H2` (no mocks).
+- **SOLID cleanup** — no behavior changes; zero regressions.
+
+**Tests:** 157 total, 0 failures (+3 E2E tests)
 
 ### v1.2.0 - PDF Generation + Docker (Phase F)
 
@@ -224,7 +232,7 @@ The API runs at `http://localhost:8080`. Swagger UI at `http://localhost:8080/sw
 
 ```bash
 mvn test
-# 154 tests, 0 failures
+# 157 tests, 0 failures
 ```
 
 Tests use H2 in-memory (no Docker needed).
@@ -386,7 +394,7 @@ Invalid transitions (e.g., DRAFT directly to ACCEPTED) return HTTP 409 Conflict.
 
 ## Testing
 
-**154 tests, 0 failures.**
+**157 tests, 0 failures.**
 
 | Layer | Tests | Framework | Speed |
 |---|---|---|---|
@@ -396,6 +404,7 @@ Invalid transitions (e.g., DRAFT directly to ACCEPTED) return HTTP 409 Conflict.
 | Security | 22 | SpringBootTest + MockMvc | ~1.5s |
 | Persistence | 22 | @DataJpaTest + H2 | ~0.5s |
 | Integration (Phase E) | 15 | SpringBootTest + H2 | ~0.4s |
+| E2E (Phase G) | 3 | SpringBootTest + MockMvc + H2 | ~3s |
 | JWT provider | 7 | JUnit5 (no Spring) | < 0.01s |
 | PDF adapter | 3 | JUnit5 (no Spring) | < 0.1s |
 
@@ -416,8 +425,8 @@ Tests use H2 in-memory database with `MODE=PostgreSQL`, `ddl-auto: create-drop`,
 | C | v0.3.0 | PostgreSQL, Docker, persistence tests | Complete |
 | D | v1.0.0 | JWT security, RBAC, rate limiting | Complete |
 | E | v1.1.0 | Calculation engine, discounts, state machine | Complete |
-| **F** | **v1.2.0** | **PDF generation, Docker full stack, profiles** | **Current** |
-| G | v1.3.0 | Code polishing, performance, >60% coverage | Planned |
+| F | v1.2.0 | PDF generation, Docker full stack, profiles | Complete |
+| **G** | **v1.3.0** | **Code polish, constants, E2E tests, portfolio ready** | **Current** |
 
 ---
 
@@ -464,6 +473,5 @@ MIT License - See [LICENSE](LICENSE) for details.
 ---
 
 **Last Updated:** June 19, 2026
-**Current Version:** v1.2.0 - PDF Generation + Docker
-**Next Milestone:** v1.3.0 - Code polishing and coverage
+**Current Version:** v1.3.0 - Code Polish + Portfolio Ready (FINAL)
 **Repository:** [GitHub](https://github.com/borja8dev/agloval-quotation-api)
