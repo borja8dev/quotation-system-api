@@ -19,20 +19,21 @@ public class OpenApiConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title("Agloval Quotation API")
-                        .version("0.2.0")
+                        .version("1.2.0")
                         .description("""
                                 REST API for automated quotation management — Agloval SL Portfolio MVP.
 
                                 ## Overview
                                 This API handles the full lifecycle of a quotation:
                                 managing clients (Users), building a product catalogue (Products),
-                                and generating itemised quotations with automatic price calculation (Quotations).
+                                generating itemised quotations with automatic price calculation (Quotations),
+                                and exporting quotations as PDF documents.
 
                                 ## Architecture
                                 Built with **Hexagonal Architecture** (Ports & Adapters):
                                 - `domain/` — pure business logic, zero Spring dependencies
                                 - `application/` — use cases, DTOs, port interfaces
-                                - `infrastructure/` — REST controllers, JPA adapters, configuration
+                                - `infrastructure/` — REST controllers, JPA adapters, PDF generation, configuration
 
                                 ## Status codes
                                 | Code | Meaning |
@@ -41,6 +42,8 @@ public class OpenApiConfig {
                                 | 201  | Resource created |
                                 | 204  | Success, no content (DELETE) |
                                 | 400  | Validation error |
+                                | 401  | Unauthorized — missing or invalid JWT |
+                                | 403  | Forbidden — insufficient role |
                                 | 404  | Resource not found |
                                 | 409  | Conflict (e.g. duplicate email) |
                                 | 500  | Unexpected server error |

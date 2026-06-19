@@ -1,8 +1,14 @@
 # Agloval Quotation API
 
-Automated quotation system for Agloval SL. REST API with volume discounts, business validations, JWT authentication, and role-based access control.
+![Java](https://img.shields.io/badge/Java-21-blue?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen?logo=spring&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?logo=postgresql&logoColor=white)
+![Tests](https://img.shields.io/badge/tests-154%20passing-success)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-**Current Version:** v1.1.0 (Phase E - Quotation Calculation Engine)
+Automated quotation system for Agloval SL. REST API with volume discounts, business validations, JWT authentication, role-based access control, and PDF export.
+
+**Current Version:** v1.2.0 (Phase F - PDF Generation + Docker)
 
 **Status:** Development/Demo (MVP)
 
@@ -15,11 +21,13 @@ Automated quotation system for Agloval SL. REST API with volume discounts, busin
 3. [Tech Stack](#tech-stack)
 4. [Architecture](#architecture)
 5. [Quick Start](#quick-start)
-6. [API Endpoints](#api-endpoints)
-7. [Business Rules](#business-rules)
-8. [Testing](#testing)
-9. [Project Phases](#project-phases)
-10. [Development Guidelines](#development-guidelines)
+6. [Docker](#docker)
+7. [API Endpoints](#api-endpoints)
+8. [PDF Export](#pdf-export)
+9. [Business Rules](#business-rules)
+10. [Testing](#testing)
+11. [Project Phases](#project-phases)
+12. [Development Guidelines](#development-guidelines)
 
 ---
 
@@ -27,22 +35,33 @@ Automated quotation system for Agloval SL. REST API with volume discounts, busin
 
 This is a demonstration MVP, not a production system currently deployed at Agloval.
 
-**What's included (v0.1 - v1.1):**
-- Fully functional REST API with 15 endpoints
+**What's included (v0.1 - v1.2):**
+- Fully functional REST API with 20 endpoints
 - JWT authentication + role-based access control
 - Quotation calculation engine with volume discounts and business validations
+- PDF export: `GET /api/v1/quotations/{id}/pdf` returns a styled PDF with VAT
 - PostgreSQL persistence with Flyway migrations
-- Professional testing suite (149 tests, 0 failures)
+- Docker: full production stack (app + DB) via `docker-compose up -d`
+- Professional testing suite (154 tests, 0 failures)
 
 **What's NOT included yet:**
 - Frontend/Web UI (planned as separate project)
-- PDF generation (Phase F)
 - Integration with Agloval's existing systems
 - Email notifications
 
 ---
 
 ## Current Status
+
+### v1.2.0 - PDF Generation + Docker (Phase F)
+
+- **PDF export** — `GET /api/v1/quotations/{id}/pdf` returns a professional PDF with client info, line items, discount breakdown, VAT (21%), and validity footer. Built with OpenPDF (LGPL).
+- **Dockerfile** — multi-stage build (Maven + JRE Alpine). Run via `docker-compose up -d`.
+- **Full Docker stack** — `docker-compose.yml` with app + PostgreSQL, healthchecks, and named volumes.
+- **Spring profiles** — `application-dev.yml` (verbose logging) and `application-prod.yml` (production-hardened, Swagger disabled).
+- **Actuator** — `/actuator/health` endpoint for container healthchecks.
+
+**Tests:** 154 total, 0 failures
 
 ### v1.1.0 - Quotation Calculation Engine (Phase E)
 
@@ -64,7 +83,7 @@ The calculation engine adds real business logic to quotation creation. All calcu
 - `QuotationStateMachine` -- enforces valid status transitions
 - `ValidityCalculator` -- resolves validity days by season and customer type
 
-**Tests added:** 73 new (149 total), including 15 integration tests with real persistence
+**Tests added:** 73 new (149 total at v1.1.0), including 15 integration tests with real persistence
 
 ### v1.0.0 - JWT Security + RBAC (Phase D)
 
@@ -104,6 +123,7 @@ The calculation engine adds real business logic to quotation creation. All calcu
 | ORM | JPA/Hibernate 6.6 |
 | Authentication | JWT (JJWT 0.12.3) + BCrypt |
 | Rate Limiting | Bucket4j 8.10.1 |
+| PDF Generation | OpenPDF 2.0.3 (LGPL) |
 | Testing | JUnit5 + Mockito + AssertJ |
 | API Documentation | Swagger/OpenAPI 3.0 (springdoc 2.7) |
 | Database Migrations | Flyway |
@@ -204,10 +224,42 @@ The API runs at `http://localhost:8080`. Swagger UI at `http://localhost:8080/sw
 
 ```bash
 mvn test
-# 149 tests, 0 failures
+# 154 tests, 0 failures
 ```
 
 Tests use H2 in-memory (no Docker needed).
+
+---
+
+## Docker
+
+### Local development (DB only)
+
+```bash
+docker-compose -f docker-compose-dev.yml up -d
+mvn spring-boot:run
+```
+
+### Full production stack (app + DB)
+
+```bash
+# 1. Create .env from the template
+cp env.example .env
+# Edit .env: set DB_PASSWORD and JWT_SECRET
+
+# 2. Build and start
+docker-compose up -d
+
+# 3. Check status
+docker-compose ps
+# Both 'agloval_postgres' and 'agloval_app' should be healthy
+
+# 4. Verify
+curl http://localhost:8080/actuator/health
+# {"status":"UP"}
+```
+
+The app container waits for PostgreSQL to be healthy before starting (depends_on + healthcheck).
 
 ---
 
@@ -224,14 +276,16 @@ Tests use H2 in-memory (no Docker needed).
 
 ### Quotations (Authenticated)
 
+### Quotations (Authenticated)
+
 | Method | Endpoint | Role | Description |
 |--------|----------|------|-------------|
 | POST | `/api/v1/quotations` | Any | Create quotation (calculates discounts automatically) |
 | GET | `/api/v1/quotations` | Any | List quotations |
 | GET | `/api/v1/quotations/{id}` | Any | Get quotation by ID |
+| GET | `/api/v1/quotations/{id}/pdf` | Any | Download quotation as PDF |
 | PATCH | `/api/v1/quotations/{id}/status` | Any | Update status (state machine enforced) |
 | GET | `/api/v1/quotations/user/{userId}` | Any | Get quotations by user |
-| DELETE | `/api/v1/quotations/{id}` | ADMIN | Delete quotation |
 
 ### Products (Authenticated)
 
@@ -252,6 +306,27 @@ Tests use H2 in-memory (no Docker needed).
 | GET | `/api/v1/users/{id}` | Get user |
 | PUT | `/api/v1/users/{id}` | Update user |
 | DELETE | `/api/v1/users/{id}` | Delete user |
+
+---
+
+## PDF Export
+
+`GET /api/v1/quotations/{id}/pdf` returns a `application/pdf` file with:
+
+- **Header** — "AGLOVAL Madera y Tableros" + quote number, issue date, expiry date
+- **Client section** — name and email
+- **Line items table** — product, quantity, unit price, discount (with breakdown), subtotal
+- **Totals** — subtotal bruto → descuento → total neto → IVA 21% → TOTAL
+- **Footer** — validity period and contact info
+
+```bash
+# Download a PDF (replace TOKEN and ID)
+curl -H "Authorization: Bearer TOKEN" \
+  http://localhost:8080/api/v1/quotations/1/pdf \
+  --output presupuesto.pdf
+```
+
+VAT (21%) is computed at render time — it is not stored in the database.
 
 ---
 
@@ -311,17 +386,18 @@ Invalid transitions (e.g., DRAFT directly to ACCEPTED) return HTTP 409 Conflict.
 
 ## Testing
 
-**149 tests, 0 failures.**
+**154 tests, 0 failures.**
 
 | Layer | Tests | Framework | Speed |
 |---|---|---|---|
 | Domain services | 43 | JUnit5 + AssertJ | < 0.01s |
 | Application services | 21 | JUnit5 + Mockito | < 0.5s |
-| Controllers | 19 | MockMvc | < 0.3s |
+| Controllers | 21 | MockMvc | < 0.3s |
 | Security | 22 | SpringBootTest + MockMvc | ~1.5s |
 | Persistence | 22 | @DataJpaTest + H2 | ~0.5s |
 | Integration (Phase E) | 15 | SpringBootTest + H2 | ~0.4s |
 | JWT provider | 7 | JUnit5 (no Spring) | < 0.01s |
+| PDF adapter | 3 | JUnit5 (no Spring) | < 0.1s |
 
 Test naming convention: `methodName_WhenCondition_ThenExpectedBehavior`
 
@@ -339,10 +415,9 @@ Tests use H2 in-memory database with `MODE=PostgreSQL`, `ddl-auto: create-drop`,
 | B | v0.2.0 | REST API, validation, Swagger | Complete |
 | C | v0.3.0 | PostgreSQL, Docker, persistence tests | Complete |
 | D | v1.0.0 | JWT security, RBAC, rate limiting | Complete |
-| **E** | **v1.1.0** | **Calculation engine, discounts, state machine** | **Current** |
-| F | v1.2.0 | PDF generation | Next |
-| G | v1.3.0 | Docker full containerization | Planned |
-| H | v1.4.0 | Code polishing, performance, >60% coverage | Planned |
+| E | v1.1.0 | Calculation engine, discounts, state machine | Complete |
+| **F** | **v1.2.0** | **PDF generation, Docker full stack, profiles** | **Current** |
+| G | v1.3.0 | Code polishing, performance, >60% coverage | Planned |
 
 ---
 
@@ -368,7 +443,8 @@ Scopes: `auth`, `quotation`, `persistence`, `validation`, `pdf`, `docs`, `testin
 - `pom.xml` -- dependencies and build config
 - `application.yml` -- main configuration
 - `db/migration/V001-V003` -- schema evolution
-- `docker-compose.yml` -- PostgreSQL 15
+- `docker-compose.yml` -- Full stack (app + PostgreSQL 15)
+- `docker-compose-dev.yml` -- PostgreSQL only (for local dev)
 
 ---
 
@@ -387,7 +463,7 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-**Last Updated:** June 12, 2026
-**Current Version:** v1.1.0 - Quotation Calculation Engine
-**Next Milestone:** v1.2.0 - PDF Generation
+**Last Updated:** June 19, 2026
+**Current Version:** v1.2.0 - PDF Generation + Docker
+**Next Milestone:** v1.3.0 - Code polishing and coverage
 **Repository:** [GitHub](https://github.com/borja8dev/agloval-quotation-api)

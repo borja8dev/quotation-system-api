@@ -3,6 +3,7 @@ package com.agloval.application.service;
 import com.agloval.application.dto.QuotationLineRequest;
 import com.agloval.application.dto.QuotationRequest;
 import com.agloval.application.dto.QuotationResponse;
+import com.agloval.application.port.out.PdfGenerationPort;
 import com.agloval.application.port.out.ProductRepositoryPort;
 import com.agloval.application.port.out.QuotationRepositoryPort;
 import com.agloval.application.port.out.UserRepositoryPort;
@@ -40,6 +41,8 @@ class QuotationServiceTest {
     private UserRepositoryPort userRepositoryPort;
     @Mock
     private ProductRepositoryPort productRepositoryPort;
+    @Mock
+    private PdfGenerationPort pdfGenerationPort;
 
     private QuotationService quotationService;
 
@@ -50,7 +53,8 @@ class QuotationServiceTest {
     void setUp() {
         QuotationCalculationService calculationService = new QuotationCalculationService();
         quotationService = new QuotationService(
-                quotationRepositoryPort, userRepositoryPort, productRepositoryPort, calculationService);
+                quotationRepositoryPort, userRepositoryPort, productRepositoryPort,
+                calculationService, pdfGenerationPort);
 
         testUser = User.builder()
                 .id(1L)

@@ -17,4 +17,6 @@ public interface QuotationUseCase {
     QuotationResponse updateStatus(Long id, QuotationStatus status);
 
     List<QuotationResponse> getQuotationsByUserId(Long userId);
+
+    byte[] getQuotationPdf(Long id);
 }

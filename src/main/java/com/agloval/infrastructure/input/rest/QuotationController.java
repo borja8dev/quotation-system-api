@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -106,6 +108,30 @@ public class QuotationController {
             @Parameter(description = "New status to apply", example = "SENT", required = true)
             @RequestParam QuotationStatus status) {
         return ResponseEntity.ok(quotationUseCase.updateStatus(id, status));
+    }
+
+    @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(
+            summary = "Download quotation as PDF",
+            description = "Generates and returns a PDF document for the given quotation, " +
+                    "including client details, line items with discount breakdowns, VAT (21%), and validity footer."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "PDF file generated successfully",
+                    content = @Content(mediaType = MediaType.APPLICATION_PDF_VALUE)),
+            @ApiResponse(responseCode = "404", description = "Quotation not found",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    public ResponseEntity<byte[]> downloadPdf(
+            @Parameter(description = "Numeric ID of the quotation", example = "1", required = true)
+            @PathVariable Long id) {
+        byte[] pdf = quotationUseCase.getQuotationPdf(id);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(
+                ContentDisposition.attachment().filename("presupuesto-" + id + ".pdf").build());
+        return ResponseEntity.ok().headers(headers).body(pdf);
     }
 
     @GetMapping("/user/{userId}")

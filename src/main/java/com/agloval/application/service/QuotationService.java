@@ -6,6 +6,7 @@ import com.agloval.application.dto.QuotationLineResponse;
 import com.agloval.application.dto.QuotationRequest;
 import com.agloval.application.dto.QuotationResponse;
 import com.agloval.application.port.in.QuotationUseCase;
+import com.agloval.application.port.out.PdfGenerationPort;
 import com.agloval.application.port.out.ProductRepositoryPort;
 import com.agloval.application.port.out.QuotationRepositoryPort;
 import com.agloval.application.port.out.UserRepositoryPort;
@@ -36,6 +37,7 @@ public class QuotationService implements QuotationUseCase {
     private final UserRepositoryPort userRepositoryPort;
     private final ProductRepositoryPort productRepositoryPort;
     private final QuotationCalculationService calculationService;
+    private final PdfGenerationPort pdfGenerationPort;
 
     private final QuotationStateMachine stateMachine = new QuotationStateMachine();
 
@@ -107,6 +109,13 @@ public class QuotationService implements QuotationUseCase {
         return quotationRepositoryPort.findByUserId(userId).stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public byte[] getQuotationPdf(Long id) {
+        QuotationResponse quotation = getQuotationById(id);
+        return pdfGenerationPort.generateQuotationPdf(quotation);
     }
 
     private String generateQuotationNumber() {
