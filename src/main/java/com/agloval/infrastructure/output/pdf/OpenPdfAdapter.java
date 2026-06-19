@@ -35,6 +35,11 @@ public class OpenPdfAdapter implements PdfGenerationPort {
     private static final Color LIGHT_GRAY = new Color(243, 244, 246);
     private static final Color BORDER_GRAY = new Color(209, 213, 219);
 
+    private static final int CELL_PADDING = 6;
+    private static final int CELL_PADDING_HEADER = 7;
+    private static final int CELL_PADDING_CLIENT_DATA = 8;
+    private static final int CELL_PADDING_GRAND_TOTAL = 9;
+
     @Override
     public byte[] generateQuotationPdf(QuotationResponse quotation) {
         try {
@@ -124,7 +129,7 @@ public class OpenPdfAdapter implements PdfGenerationPort {
         PdfPCell titleCell = new PdfPCell(new Phrase("DATOS DEL CLIENTE", sectionFont));
         titleCell.setBackgroundColor(TABLE_HEADER_BG);
         titleCell.setBorderColor(BORDER_GRAY);
-        titleCell.setPadding(6);
+        titleCell.setPadding(CELL_PADDING);
         clientTable.addCell(titleCell);
 
         Paragraph clientData = new Paragraph();
@@ -135,7 +140,7 @@ public class OpenPdfAdapter implements PdfGenerationPort {
 
         PdfPCell dataCell = new PdfPCell();
         dataCell.setBorderColor(BORDER_GRAY);
-        dataCell.setPadding(8);
+        dataCell.setPadding(CELL_PADDING_CLIENT_DATA);
         dataCell.addElement(clientData);
         clientTable.addCell(dataCell);
 
@@ -162,7 +167,7 @@ public class OpenPdfAdapter implements PdfGenerationPort {
             PdfPCell cell = new PdfPCell(new Phrase(h, headerFont));
             cell.setBackgroundColor(TABLE_HEADER_BG);
             cell.setBorderColor(BORDER_GRAY);
-            cell.setPadding(7);
+            cell.setPadding(CELL_PADDING_HEADER);
             cell.setHorizontalAlignment(h.equals("Producto") ? Element.ALIGN_LEFT : Element.ALIGN_RIGHT);
             table.addCell(cell);
         }
@@ -174,7 +179,7 @@ public class OpenPdfAdapter implements PdfGenerationPort {
             PdfPCell nameCell = new PdfPCell();
             nameCell.setBorderColor(BORDER_GRAY);
             nameCell.setBackgroundColor(rowBg);
-            nameCell.setPadding(6);
+            nameCell.setPadding(CELL_PADDING);
             Paragraph namePara = new Paragraph(line.getProductName(), cellFont);
             if (line.getDescription() != null && !line.getDescription().isBlank()) {
                 namePara.add(Chunk.NEWLINE);
@@ -189,7 +194,7 @@ public class OpenPdfAdapter implements PdfGenerationPort {
             PdfPCell dtoCell = new PdfPCell();
             dtoCell.setBorderColor(BORDER_GRAY);
             dtoCell.setBackgroundColor(rowBg);
-            dtoCell.setPadding(6);
+            dtoCell.setPadding(CELL_PADDING);
             dtoCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
             Paragraph dtoPara = new Paragraph(line.getDiscountPercent() + "%", cellFont);
             if (line.getDiscountBreakdown() != null && !line.getDiscountBreakdown().isBlank()) {
@@ -232,14 +237,14 @@ public class OpenPdfAdapter implements PdfGenerationPort {
         PdfPCell totalLabel = new PdfPCell(new Phrase("TOTAL:", totalFont));
         totalLabel.setBackgroundColor(AGLOVAL_BLUE);
         totalLabel.setBorderColor(AGLOVAL_BLUE);
-        totalLabel.setPadding(9);
+        totalLabel.setPadding(CELL_PADDING_GRAND_TOTAL);
         totalLabel.setHorizontalAlignment(Element.ALIGN_LEFT);
         totalsTable.addCell(totalLabel);
 
         PdfPCell totalValue = new PdfPCell(new Phrase(formatCurrency(totalWithVat), totalFont));
         totalValue.setBackgroundColor(AGLOVAL_BLUE);
         totalValue.setBorderColor(AGLOVAL_BLUE);
-        totalValue.setPadding(9);
+        totalValue.setPadding(CELL_PADDING_GRAND_TOTAL);
         totalValue.setHorizontalAlignment(Element.ALIGN_RIGHT);
         totalsTable.addCell(totalValue);
 
@@ -275,14 +280,14 @@ public class OpenPdfAdapter implements PdfGenerationPort {
         PdfPCell labelCell = new PdfPCell(new Phrase(label, labelFont));
         labelCell.setBackgroundColor(bg);
         labelCell.setBorderColor(BORDER_GRAY);
-        labelCell.setPadding(6);
+        labelCell.setPadding(CELL_PADDING);
         labelCell.setHorizontalAlignment(Element.ALIGN_LEFT);
         table.addCell(labelCell);
 
         PdfPCell valueCell = new PdfPCell(new Phrase(value, valueFont));
         valueCell.setBackgroundColor(bg);
         valueCell.setBorderColor(BORDER_GRAY);
-        valueCell.setPadding(6);
+        valueCell.setPadding(CELL_PADDING);
         valueCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         table.addCell(valueCell);
     }
@@ -291,7 +296,7 @@ public class OpenPdfAdapter implements PdfGenerationPort {
         PdfPCell cell = new PdfPCell(new Phrase(text, font));
         cell.setBorderColor(BORDER_GRAY);
         cell.setBackgroundColor(bg);
-        cell.setPadding(6);
+        cell.setPadding(CELL_PADDING);
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         return cell;
     }
