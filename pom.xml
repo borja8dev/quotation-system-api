@@ -11,11 +11,11 @@
     <relativePath/>
   </parent>
 
-  <groupId>com.agloval</groupId>
-  <artifactId>agloval-quotation-api</artifactId>
+  <groupId>com.quotation</groupId>
+  <artifactId>quotation-system-api</artifactId>
   <version>0.1.0</version>
-  <name>agloval-quotation-api</name>
-  <description>Quotation management API for Agloval SL - Portfolio MVP</description>
+  <name>quotation-system-api</name>
+  <description>Quotation management system — REST API with volume discounts, calculations, JWT auth, RBAC, and PDF export.</description>
 
   <properties>
     <java.version>21</java.version>

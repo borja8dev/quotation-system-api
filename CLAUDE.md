@@ -1,4 +1,4 @@
-# Agloval Quotation API - Project Constitution
+# Quotation System API - Project Constitution
 
 ## Architecture
 - **Pattern**: Hexagonal (Ports & Adapters)
@@ -13,7 +13,7 @@
 - **Naming**: PascalCase (User, ProductController), camelCase (getUserId), UPPERCASE (MAX_RETRIES)
 - **Methods**: <30 líneas máximo, una responsabilidad por método
 - **Classes**: Una responsabilidad por clase (Single Responsibility Principle)
-- **Package structure**: Sigue la carpeta física (com.agloval.infrastructure.persistence.*)
+- **Package structure**: Sigue la carpeta física (com.quotation.infrastructure.persistence.*)
 
 ## Testing
 - **Framework**: JUnit5 + Mockito
@@ -100,7 +100,7 @@ Allowed Headers: Authorization, Content-Type, Accept
 Credentials: true
 
 **Production:**
-Allowed Origins: https://agloval.es, https://app.agloval.es
+Allowed Origins: https://example.com, https://app.example.com
 Allowed Methods: GET, POST, PUT, DELETE
 Allowed Headers: Authorization, Content-Type
 Credentials: true
@@ -235,7 +235,7 @@ domain/entity/
 ```yaml
 app:
   jwt:
-    secret: ${JWT_SECRET:agloval-dev-secret-key-min-32-chars-for-hs256-ok}
+    secret: ${JWT_SECRET:quotation-dev-secret-key-min-32-chars-for-hs256-ok}
     access-token-expiry: 900000     # 15 minutes in ms
     refresh-token-expiry: 604800000 # 7 days in ms
   cors:

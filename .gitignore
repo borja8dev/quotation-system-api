@@ -43,3 +43,8 @@ build/
 
 # Claude Code internal
 .atl/
+
+# Environment variables
+.env
+.env.local
+.env.*.local

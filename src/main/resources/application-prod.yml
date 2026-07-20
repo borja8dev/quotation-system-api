@@ -13,7 +13,7 @@ spring:
 logging:
   level:
     root: WARN
-    com.agloval: INFO
+    com.quotation: INFO
 
 management:
   endpoints:

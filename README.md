@@ -1,4 +1,4 @@
-# Agloval Quotation API
+# Quotation System API
 
 ![Java](https://img.shields.io/badge/Java-21-blue?logo=openjdk&logoColor=white)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.0-brightgreen?logo=spring&logoColor=white)
@@ -6,7 +6,7 @@
 ![Tests](https://img.shields.io/badge/tests-157%20passing-success)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-Automated quotation system for Agloval SL. REST API with volume discounts, business validations, JWT authentication, role-based access control, and PDF export.
+REST API for quotation management with volume discounts, business validations, JWT authentication, role-based access control, and PDF export.
 
 **Current Version:** v1.3.0 (Phase G - Code Polish + Portfolio Ready)
 
@@ -33,7 +33,7 @@ Automated quotation system for Agloval SL. REST API with volume discounts, busin
 
 ## Project Scope
 
-This is a demonstration MVP, not a production system currently deployed at Agloval.
+This is a demonstration MVP, not a production system currently in deployment.
 
 **What's included (v0.1 - v1.3):**
 - Fully functional REST API with 20 endpoints
@@ -46,7 +46,6 @@ This is a demonstration MVP, not a production system currently deployed at Aglov
 
 **What's NOT included yet:**
 - Frontend/Web UI (planned as separate project)
-- Integration with Agloval's existing systems
 - Email notifications
 
 ---
@@ -159,7 +158,7 @@ DOMAIN (Entities, Services, Exceptions -- no Spring)
 ### Project Structure
 
 ```
-src/main/java/com/agloval/
+src/main/java/com/quotation/
 |
 +-- domain/                              [Business Logic - no Spring]
 |   +-- entity/
@@ -260,7 +259,7 @@ docker-compose up -d
 
 # 3. Check status
 docker-compose ps
-# Both 'agloval_postgres' and 'agloval_app' should be healthy
+# Both 'quotation_postgres' and 'quotation_app' should be healthy
 
 # 4. Verify
 curl http://localhost:8080/actuator/health
@@ -321,7 +320,7 @@ The app container waits for PostgreSQL to be healthy before starting (depends_on
 
 `GET /api/v1/quotations/{id}/pdf` returns a `application/pdf` file with:
 
-- **Header** — "AGLOVAL Madera y Tableros" + quote number, issue date, expiry date
+- **Header** — "QUOTATION Madera y Tableros" + quote number, issue date, expiry date
 - **Client section** — name and email
 - **Line items table** — product, quantity, unit price, discount (with breakdown), subtotal
 - **Totals** — subtotal bruto → descuento → total neto → IVA 21% → TOTAL
@@ -474,4 +473,4 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 **Last Updated:** June 19, 2026
 **Current Version:** v1.3.0 - Code Polish + Portfolio Ready (FINAL)
-**Repository:** [GitHub](https://github.com/borja8dev/agloval-quotation-api)
+**Repository:** [GitHub](https://github.com/borja8dev/quotation-system-api)
