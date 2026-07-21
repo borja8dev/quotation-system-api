@@ -429,6 +429,20 @@ Tests use H2 in-memory database with `MODE=PostgreSQL`, `ddl-auto: create-drop`,
 
 ---
 
+## Development Timeline
+
+| Phase | Version | Focus | Status |
+|-------|---------|-------|--------|
+| A | v0.1.0 | Domain entities, JPA, Flyway | Complete |
+| B | v0.2.0 | REST API, validation, Swagger | Complete |
+| C | v0.3.0 | PostgreSQL persistence, Docker | Complete |
+| D | v1.0.0 | JWT security, RBAC, rate limiting | Complete |
+| E | v1.1.0 | Calculation engine, discounts, state machine | Complete |
+| F | v1.2.0 | PDF generation, Docker full stack | Complete |
+| G | v1.3.0 | Code polish, constants, E2E tests | Complete |
+
+**Summary:** 7 phases • 23 commits • 7 releases • 157 tests • Hexagonal Architecture
+
 ## Development Guidelines
 
 ### Code Style
@@ -471,6 +485,6 @@ MIT License - See [LICENSE](LICENSE) for details.
 
 ---
 
-**Last Updated:** June 19, 2026
+**Last Updated:** July 2026 | **Status:** Portfolio Ready - v1.3.0
 **Current Version:** v1.3.0 - Code Polish + Portfolio Ready (FINAL)
 **Repository:** [GitHub](https://github.com/borja8dev/quotation-system-api)
