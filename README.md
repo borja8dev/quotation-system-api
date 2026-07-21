@@ -49,79 +49,20 @@ REST API for quotation management with volume discounts, business validations, J
 
 ## Tech Stack
 
-
-|
-Component
-|
-Technology
-|
-|
------------
-|
------------
-|
-|
-Language
-|
-Java 21+
-|
-|
-Framework
-|
-Spring Boot 3.4
-|
-|
-Database
-|
-PostgreSQL 15 (production), H2 (testing)
-|
-|
-ORM
-|
-JPA/Hibernate 6.6
-|
-|
-Authentication
-|
-JWT (JJWT 0.12.3) + BCrypt
-|
-|
-Rate Limiting
-|
-Bucket4j 8.10.1
-|
-|
-PDF Generation
-|
-OpenPDF 2.0.3 (LGPL)
-|
-|
-Testing
-|
-JUnit5 + Mockito + AssertJ
-|
-|
-API Documentation
-|
-Swagger/OpenAPI 3.0 (springdoc 2.7)
-|
-|
-Database Migrations
-|
-Flyway
-|
-|
-Build Tool
-|
-Maven
-|
-|
-Containerization
-|
-Docker + Docker Compose
-|
-
----
+| Component | Technology |
+|-----------|-----------|
+| Language | Java 21+ |
+| Framework | Spring Boot 3.4 |
+| Database | PostgreSQL 15 (production), H2 (testing) |
+| ORM | JPA/Hibernate 6.6 |
+| Authentication | JWT (JJWT 0.12.3) + BCrypt |
+| Rate Limiting | Bucket4j 8.10.1 |
+| PDF Generation | OpenPDF 2.0.3 (LGPL) |
+| Testing | JUnit5 + Mockito + AssertJ |
+| API Documentation | Swagger/OpenAPI 3.0 (springdoc 2.7) |
+| Database Migrations | Flyway |
+| Build Tool | Maven |
+| Containerization | Docker + Docker Compose |
 
 ## Architecture
 
