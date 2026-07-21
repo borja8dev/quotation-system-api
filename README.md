@@ -123,10 +123,9 @@ src/main/java/com/quotation/
 +-- output/persistence/
 +-- security/
 +-- config/
-```
 
 ---
-
+```
 ## Quick Start
 
 ### Prerequisites
